@@ -1,0 +1,48 @@
+resource_registry:
+  OS::TripleO::Services::CinderVolumeEdge: /usr/share/openstack-tripleo-heat-templates/deployment/cinder/cinder-volume-container-puppet.yaml 
+  OS::TripleO::Services::Etcd: /usr/share/openstack-tripleo-heat-templates/deployment/etcd/etcd-container-puppet.yaml
+  OS::TripleO::Services::GlanceApiEdge: /usr/share/openstack-tripleo-heat-templates/deployment/glance/glance-api-edge-container-puppet.yaml
+  OS::TripleO::Services::NovaAZConfig: /usr/share/openstack-tripleo-heat-templates/deployment/nova/nova-az-config.yaml
+  OS::TripleO::Services::CACerts: OS::Heat::None
+  OS::TripleO::Services::CinderApi: OS::Heat::None
+  OS::TripleO::Services::CinderScheduler: OS::Heat::None
+  OS::TripleO::Services::Clustercheck: OS::Heat::None
+  OS::TripleO::Services::HAproxy: OS::Heat::None
+  OS::TripleO::Services::Horizon: OS::Heat::None
+  OS::TripleO::Services::Keystone: OS::Heat::None
+  OS::TripleO::Services::Memcached: OS::Heat::None
+  OS::TripleO::Services::MySQL: OS::Heat::None
+  OS::TripleO::Services::NeutronApi: OS::Heat::None
+  OS::TripleO::Services::NeutronDhcpAgent: OS::Heat::None
+  OS::TripleO::Services::NovaApi: OS::Heat::None
+  OS::TripleO::Services::NovaConductor: OS::Heat::None
+  OS::TripleO::Services::NovaConsoleauth: OS::Heat::None
+  OS::TripleO::Services::NovaIronic: OS::Heat::None
+  OS::TripleO::Services::NovaMetadata: OS::Heat::None
+  OS::TripleO::Services::NovaPlacement: OS::Heat::None
+  OS::TripleO::Services::NovaScheduler: OS::Heat::None
+  OS::TripleO::Services::NovaVncProxy: OS::Heat::None
+  OS::TripleO::Services::OsloMessagingNotify: OS::Heat::None
+  OS::TripleO::Services::OsloMessagingRpc: OS::Heat::None
+  OS::TripleO::Services::Pacemaker: OS::Heat::None
+  OS::TripleO::Services::PlacementApi: OS::Heat::None
+  OS::TripleO::Services::Pacemaker: OS::Heat::None
+  OS::TripleO::Services::Redis: OS::Heat::None
+  OS::TripleO::Services::SwiftProxy: OS::Heat::None
+  OS::TripleO::Services::SwiftRingBuilder: OS::Heat::None
+  OS::TripleO::Services::SwiftStorage: OS::Heat::None
+
+parameter_defaults:
+  CinderStorageAvailabilityZone: edge0
+  GlanceBackend: file
+  GlanceBackendID: edge0
+  GlanceEnabledImportMethods: web-download,copy-image
+  GlanceStoreDescription: 'edge0 file glance store'
+  NeutronDefaultAvailabilityZones: edge0
+  NovaComputeAvailabilityZone: edge0
+  NovaCrossAZAttach: false
+  OVNCMSOptions: 'enable-chassis-as-gw,availability-zones=edge0'
+  StandaloneExtraConfig:
+    nova::availability_zone::default_schedule_zone: edge0
+    oslo_messaging_notify_use_ssl: false
+    oslo_messaging_rpc_use_ssl: false
