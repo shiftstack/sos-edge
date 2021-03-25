@@ -44,6 +44,7 @@ enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
   - /home/stack/export_control_plane/edge0.yaml
   - /home/stack/export_control_plane/passwords.yaml
+  - /home/stack/export_control_plane/oslo.yaml
   - /home/stack/export_control_plane/endpoint-map.json
   - /home/stack/export_control_plane/extra-host-file-entries.json
   - /home/stack/export_control_plane/all-nodes-extra-map-data.json
@@ -58,6 +59,7 @@ enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
   - /home/stack/export_control_plane/edge1.yaml
   - /home/stack/export_control_plane/passwords.yaml
+  - /home/stack/export_control_plane/oslo.yaml
   - /home/stack/export_control_plane/endpoint-map.json
   - /home/stack/export_control_plane/extra-host-file-entries.json
   - /home/stack/export_control_plane/all-nodes-extra-map-data.json
