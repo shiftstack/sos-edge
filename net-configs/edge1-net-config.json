@@ -1,0 +1,80 @@
+{
+  "network_config": [
+    {
+      "members": [
+        {
+          "name": "eno3",
+          "primary": true,
+          "type": "interface"
+        }
+      ],
+      "mtu": 1500,
+      "name": "br-ex",
+      "ovs_extra": [
+        "br-set-external-id br-ex bridge-id br-ex"
+      ],
+      "type": "ovs_bridge",
+      "use_dhcp": true
+    },
+    {
+      "addresses": [
+        {
+          "ip_netmask": "10.46.26.15/32"
+        }
+      ],
+      "members": [
+        {
+          "name": "dummy0",
+          "nm_controlled": true,
+          "type": "interface"
+        }
+      ],
+      "mtu": 1500,
+      "name": "br-ctlplane",
+      "ovs_extra": [
+        "br-set-external-id br-ctlplane bridge-id br-ctlplane"
+      ],
+      "type": "ovs_bridge",
+      "use_dhcp": false
+    },
+    {
+      "addresses": [
+        {
+          "ip_netmask": "192.168.26.2/32"
+        }
+      ],
+      "members": [
+        {
+          "name": "dummy1",
+          "nm_controlled": true,
+          "type": "interface"
+        },
+        {
+          "ovs_options": [
+            "remote_ip=10.8.2.168"
+          ],
+          "name": "gre0",
+          "type": "ovs_tunnel",
+          "tunnel_type": "gre"
+        }
+      ],
+      "mtu": 1500,
+      "name": "br-hostonly",
+      "ovs_extra": [
+        "br-set-external-id br-hostonly bridge-id br-hostonly"
+      ],
+      "routes": [
+        {
+          "destination": "192.168.27.0/24",
+          "nexthop": "192.168.27.1"
+        },
+        {
+          "destination": "192.168.26.0/24",
+          "nexthop": "192.168.26.1"
+        }
+      ],
+      "type": "ovs_bridge",
+      "use_dhcp": false
+    }
+  ]
+}
