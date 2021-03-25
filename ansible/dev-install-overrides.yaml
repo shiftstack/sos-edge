@@ -26,7 +26,7 @@ cip_config:
 standalone_host: dcn-central.macchi.pro
 public_api: 10.0.111.144
 control_plane_ip: 10.0.111.144
-hostname: standalone-central
+hostname: dcn-central
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/services/octavia.yaml
   - /home/stack/edge-central.yaml
