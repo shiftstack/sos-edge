@@ -29,7 +29,7 @@ control_plane_ip: 10.0.111.144
 hostname: dcn-central
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/services/octavia.yaml
-  - /home/stack/edge-central.yaml
+  - /home/stack/central.yaml
 
 # edge sites:
 standalone_role: /home/stack/StandaloneEdge.yaml
