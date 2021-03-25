@@ -52,5 +52,3 @@ parameter_defaults:
   OVNCMSOptions: 'enable-chassis-as-gw,availability-zones=edge0'
   StandaloneExtraConfig:
     nova::availability_zone::default_schedule_zone: edge0
-    oslo_messaging_notify_use_ssl: false
-    oslo_messaging_rpc_use_ssl: false
