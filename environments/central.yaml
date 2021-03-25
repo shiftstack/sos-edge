@@ -2,19 +2,11 @@ resource_registry:
   OS::TripleO::Services::NovaAZConfig: /usr/share/openstack-tripleo-heat-templates/deployment/nova/nova-az-config.yaml
 
 parameter_defaults:
-  CephAnsibleDisksConfig:
-    devices:
-      - /dev/sdc
-    osd_objectstore: bluestore
-    osd_scenario: lvm
-  CephPoolDefaultPgNum: 32
-  CephPoolDefaultSize: 1
-  CephClusterName: central
   CinderStorageAvailabilityZone: central
-  GlanceBackend: rbd
+  GlanceBackend: file
   GlanceBackendID: central
   GlanceEnabledImportMethods: web-download,copy-image
-  GlanceStoreDescription: 'central rbd glance store'
+  GlanceStoreDescription: 'central file glance store'
   NeutronDefaultAvailabilityZones: central
   NovaComputeAvailabilityZone: central
   NovaCrossAZAttach: false

@@ -43,7 +43,6 @@ parameter_defaults:
   CephClusterName: edge1
   CinderStorageAvailabilityZone: edge1
   GlanceBackend: rbd
-  GlanceBackend: file
   GlanceBackendID: edge1
   GlanceEnabledImportMethods: web-download,copy-image
   GlanceStoreDescription: 'edge1 rbd glance store'

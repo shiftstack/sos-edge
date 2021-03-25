@@ -33,11 +33,19 @@ resource_registry:
   OS::TripleO::Services::SwiftStorage: OS::Heat::None
 
 parameter_defaults:
+  CephAnsibleDisksConfig:
+    devices:
+      - /dev/sdc
+    osd_objectstore: bluestore
+    osd_scenario: lvm
+  CephPoolDefaultPgNum: 32
+  CephPoolDefaultSize: 1
+  CephClusterName: edge0
   CinderStorageAvailabilityZone: edge0
-  GlanceBackend: file
+  GlanceBackend: rbd
   GlanceBackendID: edge0
   GlanceEnabledImportMethods: web-download,copy-image
-  GlanceStoreDescription: 'edge0 file glance store'
+  GlanceStoreDescription: 'edge0 rbd glance store'
   NeutronDefaultAvailabilityZones: edge0
   NovaComputeAvailabilityZone: edge0
   NovaCrossAZAttach: false
