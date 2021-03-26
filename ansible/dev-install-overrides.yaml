@@ -28,6 +28,7 @@ standalone_host: dcn-central.macchi.pro
 public_api: 10.0.111.144
 control_plane_ip: 10.0.111.144
 hostname: dcn-central
+neutron_flat_networks: "external,hostonly,segment0"
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/services/octavia.yaml
   - /home/stack/central.yaml
@@ -40,6 +41,7 @@ hostname: dcn-edge0
 standalone_host: dcn-edge0.macchi.pro
 public_api: 10.8.2.168
 control_plane_ip: 10.8.2.168
+neutron_bridge_mappings: "external:br-ex,segment0:br-segment0"
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
   - /home/stack/export_control_plane/edge0.yaml
@@ -55,6 +57,7 @@ hostname: dcn-edge1
 standalone_host: dcn-edge1.macchi.pro
 public_api: 10.46.26.15
 control_plane_ip: 10.46.26.15
+neutron_bridge_mappings: "external:br-ex,segment0:br-segment0"
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
   - /home/stack/export_control_plane/edge1.yaml
