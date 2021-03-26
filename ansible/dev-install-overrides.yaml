@@ -57,7 +57,7 @@ hostname: dcn-edge1
 standalone_host: dcn-edge1.macchi.pro
 public_api: 10.46.26.15
 control_plane_ip: 10.46.26.15
-neutron_bridge_mappings: "external:br-ex,segment0:br-segment0"
+neutron_bridge_mappings: "external:br-ex,segment1:br-segment1"
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
   - /home/stack/export_control_plane/edge1.yaml
