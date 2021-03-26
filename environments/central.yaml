@@ -3,6 +3,9 @@ resource_registry:
 
 parameter_defaults:
   CinderStorageAvailabilityZone: central
+  NtpServer:
+  - clock.redhat.com
+  - clock2.redhat.com
   GlanceBackend: file
   GlanceBackendID: central
   GlanceEnabledImportMethods: web-download,copy-image
