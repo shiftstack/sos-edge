@@ -1,0 +1,10 @@
+# Central site:
+# Running classic standalone with RBD backend and Octavia (for Kuryr)
+standalone_host: dcn-central.macchi.pro
+public_api: 10.0.166.250
+control_plane_ip: 10.0.166.250
+hostname: dcn-central
+neutron_flat_networks: "external,hostonly,segment0"
+enabled_services:
+  - /usr/share/openstack-tripleo-heat-templates/environments/services/octavia.yaml
+  - /tmp/central.yaml
