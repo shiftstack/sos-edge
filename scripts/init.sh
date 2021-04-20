@@ -36,12 +36,11 @@ function check_host_ping {
 }
 
 function deploy_central {
-    # To run against PSI
     read -p "Host will be removed, are you sure? (Press ENTER if yes, otherwise abort with CTRL+C)" -n 1 -r
     echo "Destroying dcn-central.macchi.pro..."
     openstack server delete dcn-central.macchi.pro &>/dev/null
     echo "Creating dcn-central.macchi.pro..."
-    openstack server create --wait --flavor m1.xlarge --port dcn-central.macchi.pro --image RHEL-8.4.0-x86_64-latest --key-name emacchi --security-group edge-poc dcn-central.macchi.pro
+    openstack server create --wait --user-data ~/cloud-config --flavor m1.xlarge --port dcn-central.macchi.pro --image RHEL-8.4.0-x86_64-latest --key-name emacchi --security-group edge-poc dcn-central.macchi.pro
     sleep 60
     echo "Checking dcn-central.macchi.pro connectivity..."
     check_host_ping dcn-central.macchi.pro || echo "Failed to reach dcn-central.macchi.pro after 100 attempts"; exit 1
@@ -49,19 +48,26 @@ function deploy_central {
 }
 
 function config_central {
+    echo "Preparing configuration files to deploy OpenStack..."
     mkdir -p $tmp_dir/central
     cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/central/local-overrides.yaml
     cat $root_dir/ansible/dev-install-overrides-central.yaml >>$tmp_dir/central/local-overrides.yaml
-    cat $tmp_dir/central/local-overrides.yaml
     cp $root_dir/environments/central.yaml $tmp_dir/central
-    scp $tmp_dir/central/central.yaml cloud-user@dcn-central.macchi.pro:/tmp/central.yaml
+    scp $tmp_dir/central/central.yaml cloud-user@dcn-central.macchi.pro:/tmp/central.yaml &>/dev/null
 }
 
 function run_central {
+    git clone https://github.com/shiftstack/dev-install $tmp_dir/dev-install &>/dev/null
+    pushd $tmp_dir/dev-install
+    make config host=dcn-central.macchi.pro user=cloud-user &>/dev/null
+    echo "Running the OpenStack deployment on dcn-central.macchi.pro..."
+    make osp_full
+    popd
 }
 
 if [[ "${site}" == "central" ]]; then
     deploy_central
     config_central
     run_central
+    echo "Deployment has finished!"
 fi
