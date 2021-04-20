@@ -43,7 +43,10 @@ function deploy_central {
     openstack server create --wait --flavor m1.xlarge --port dcn-central.macchi.pro --image RHEL-8.4.0-x86_64-latest --key-name emacchi --security-group edge-poc dcn-central.macchi.pro
     sleep 60
     echo "Checking dcn-central.macchi.pro connectivity..."
-    check_host_ping dcn-central.macchi.pro || echo "Failed to reach dcn-central.macchi.pro after 100 attempts"; exit 1
+    if ! check_host_ping dcn-central.macchi.pro; then
+            echo "Failed to reach dcn-central.macchi.pro after 100 attempts"
+            return 1
+    fi
     echo "dcn-central.macchi.pro was successfuly deployed!"
 }
 
