@@ -8,6 +8,7 @@ export OS_CLOUD=upshift-sos
 
 root_dir=$PWD
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
+git clone https://github.com/shiftstack/dev-install $tmp_dir/dev-install &>/dev/null
 
 if [ ! -d "scripts" ]; then
     echo "Script must be run from the root dir, usage: ./scripts/init.sh <site_name> (central or edgeX)" 
@@ -16,6 +17,9 @@ fi
 [[ "$#" -ne 1 ]] && echo "Missing argument, usage: ./scripts/init.sh <site_name> (central or edgeX)" && exit 1
 site=$1
 
+# Check host connectivity with ICMP (ping).
+# It'll try 100 times to ping a specific host
+# which is given as the only argument of this function.
 function check_host_ping {
         ((count = 100))
         host=$1
@@ -38,7 +42,7 @@ function check_host_ping {
 function deploy_central {
     read -p "Host will be removed, are you sure? (Press ENTER if yes, otherwise abort with CTRL+C)" -n 1 -r
     echo "Destroying dcn-central.macchi.pro..."
-    openstack server delete dcn-central.macchi.pro &>/dev/null
+    openstack server delete --wait dcn-central.macchi.pro &>/dev/null
     echo "Creating dcn-central.macchi.pro..."
     openstack server create --wait --flavor m1.xlarge --port dcn-central.macchi.pro --image RHEL-8.4.0-x86_64-latest --key-name emacchi --security-group edge-poc dcn-central.macchi.pro
     sleep 60
@@ -51,20 +55,37 @@ function deploy_central {
 }
 
 function config_central {
-    echo "Preparing configuration files to deploy OpenStack..."
+    echo "Preparing configuration files to deploy OpenStack in ${tmp_dir}/central ..."
     mkdir -p $tmp_dir/central
-    cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/central/local-overrides.yaml
-    cat $root_dir/ansible/dev-install-overrides-central.yaml >>$tmp_dir/central/local-overrides.yaml
+    cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/central/ansible-overrides.yaml
+    cat $root_dir/ansible/dev-install-overrides-central.yaml >>$tmp_dir/central/ansible-overrides.yaml
     cp $root_dir/environments/central.yaml $tmp_dir/central
     scp $tmp_dir/central/central.yaml cloud-user@dcn-central.macchi.pro:/tmp/central.yaml &>/dev/null
 }
 
+function config_edge0 {
+    echo "Preparing configuration files to deploy OpenStack in ${tmp_dir}/edge0 ..."
+    mkdir -p $tmp_dir/edge0
+    scp $root_dir/roles/StandaloneEdge.yaml stack@dcn-edge0.macchi.pro: &>/dev/null
+    cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/edge0/ansible-overrides.yaml
+    cat $root_dir/ansible/dev-install-overrides-edge0.yaml >>$tmp_dir/edge0/ansible-overrides.yaml
+    cp $root_dir/environments/edge0.yaml $tmp_dir/edge0
+    scp $tmp_dir/edge0/edge0.yaml stack@dcn-edge0.macchi.pro: &>/dev/null
+}
+
+function run_edge0 {
+    pushd $tmp_dir/dev-install
+    make config host=dcn-edge0.macchi.pro user=stack &>/dev/null
+    echo "Running the OpenStack deployment on dcn-edge0.macchi.pro..."
+    make osp_full ansible_args="-e @${tmp_dir}/edge0/ansible-overrides.yaml"
+    popd
+}
+
 function run_central {
-    git clone https://github.com/shiftstack/dev-install $tmp_dir/dev-install &>/dev/null
     pushd $tmp_dir/dev-install
     make config host=dcn-central.macchi.pro user=cloud-user &>/dev/null
     echo "Running the OpenStack deployment on dcn-central.macchi.pro..."
-    make osp_full
+    make osp_full ansible_args="-e @${tmp_dir}/central/ansible-overrides.yaml"
     popd
 }
 
@@ -72,5 +93,11 @@ if [[ "${site}" == "central" ]]; then
     deploy_central
     config_central
     run_central
-    echo "Deployment has finished!"
+    echo "Deployment of central site has finished!"
+fi
+
+if [[ "${site}" == "edge0" ]]; then
+    config_edge0
+    run_edge0
+    echo "Deployment of edge0 site has finished!"
 fi

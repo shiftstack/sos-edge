@@ -6,7 +6,7 @@ cip_config:
   - set:
       namespace: registry-proxy.engineering.redhat.com/rh-osbs
       name_prefix: rhosp16-openstack-
-      tag: 16.2_20210409.1
+      tag: 16.2_20210420.1
       ceph_image: rhceph
       ceph_namespace: registry-proxy.engineering.redhat.com/rh-osbs
       ceph_tag: 4-36
