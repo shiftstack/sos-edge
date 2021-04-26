@@ -38,7 +38,7 @@ parameter_defaults:
   - clock2.redhat.com
   CephAnsibleDisksConfig:
     devices:
-      - /dev/sdc
+      - /dev/sdb
     osd_objectstore: bluestore
     osd_scenario: lvm
   CephPoolDefaultPgNum: 32

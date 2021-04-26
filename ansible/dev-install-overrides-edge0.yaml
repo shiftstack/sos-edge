@@ -1,8 +1,8 @@
 standalone_role: /home/stack/StandaloneEdge.yaml
 hostname: dcn-edge0
 standalone_host: dcn-edge0.macchi.pro
-public_api: 10.8.2.168
-control_plane_ip: 10.8.2.168
+public_api: 10.1.8.99
+control_plane_ip: 10.1.8.99
 neutron_bridge_mappings: "external:br-ex,segment0:br-segment0"
 enabled_services:
   - /usr/share/openstack-tripleo-heat-templates/environments/ceph-ansible/ceph-ansible.yaml
