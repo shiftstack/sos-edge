@@ -63,21 +63,25 @@ function config_central {
     scp $tmp_dir/central/central.yaml cloud-user@dcn-central.macchi.pro:/tmp/central.yaml &>/dev/null
 }
 
-function config_edge0 {
-    echo "Preparing configuration files to deploy OpenStack in ${tmp_dir}/edge0 ..."
-    mkdir -p $tmp_dir/edge0
-    scp $root_dir/roles/StandaloneEdge.yaml stack@dcn-edge0.macchi.pro: &>/dev/null
-    cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/edge0/ansible-overrides.yaml
-    cat $root_dir/ansible/dev-install-overrides-edge0.yaml >>$tmp_dir/edge0/ansible-overrides.yaml
-    cp $root_dir/environments/edge0.yaml $tmp_dir/edge0
-    scp $tmp_dir/edge0/edge0.yaml stack@dcn-edge0.macchi.pro: &>/dev/null
+function config_edge {
+    site=$1
+    echo "Preparing configuration files to deploy OpenStack in ${tmp_dir}/edge${site} ..."
+    mkdir -p $tmp_dir/edge${site}
+    scp $root_dir/roles/StandaloneEdge.yaml stack@dcn-edge${site}.macchi.pro: &>/dev/null
+    cp $root_dir/ansible/dev-install-overrides-common.yaml $tmp_dir/edge${site}/ansible-overrides.yaml
+    cat $root_dir/ansible/dev-install-overrides-edge${site}.yaml >>$tmp_dir/edge${site}/ansible-overrides.yaml
+    cp $root_dir/environments/edge${site}.yaml $tmp_dir/edge${site}
+    scp $tmp_dir/edge${site}/edge${site}.yaml stack@dcn-edge${site}.macchi.pro: &>/dev/null
+    scp -r cloud-user@dcn-central.macchi.pro:/tmp/export_control_plane $tmp_dir &>/dev/null
+    scp -r $tmp_dir/export_control_plane stack@dcn-edge${site}.macchi.pro: &>/dev/null
 }
 
 function run_edge0 {
+    site=$1
     pushd $tmp_dir/dev-install
-    make config host=dcn-edge0.macchi.pro user=stack &>/dev/null
-    echo "Running the OpenStack deployment on dcn-edge0.macchi.pro..."
-    make osp_full ansible_args="-e @${tmp_dir}/edge0/ansible-overrides.yaml"
+    make config host=dcn-edge${site}.macchi.pro user=stack &>/dev/null
+    echo "Running the OpenStack deployment on dcn-edge${site}.macchi.pro..."
+    make osp_full ansible_args="-e @${tmp_dir}/edge${site}/ansible-overrides.yaml"
     popd
 }
 
@@ -96,8 +100,9 @@ if [[ "${site}" == "central" ]]; then
     echo "Deployment of central site has finished!"
 fi
 
-if [[ "${site}" == "edge0" ]]; then
-    config_edge0
-    run_edge0
-    echo "Deployment of edge0 site has finished!"
+if [[ "${site}" =~ "edge" ]]; then
+    number="${site: -1}"
+    config_edge $number
+    run_edge0 $number
+    echo "Deployment of edge${number} site has finished!"
 fi
