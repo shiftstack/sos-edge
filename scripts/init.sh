@@ -76,7 +76,7 @@ function config_edge {
     scp -r $tmp_dir/export_control_plane stack@dcn-edge${site}.macchi.pro: &>/dev/null
 }
 
-function run_edge0 {
+function run_edge {
     site=$1
     pushd $tmp_dir/dev-install
     make config host=dcn-edge${site}.macchi.pro user=stack &>/dev/null
@@ -103,6 +103,6 @@ fi
 if [[ "${site}" =~ "edge" ]]; then
     number="${site: -1}"
     config_edge $number
-    run_edge0 $number
+    run_edge $number
     echo "Deployment of edge${number} site has finished!"
 fi
